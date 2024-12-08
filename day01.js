@@ -1,8 +1,9 @@
-const pairs = `99006   28305
-38540   91683
-...
-47199   88293
-20631   56266`.split('\n')
+const pairs = `3   4
+4   3
+2   5
+1   3
+3   9
+3   3`.split('\n')
 
 const leftList = pairs.map(pair => +pair.split(/ +/)[0])
 const rightList = pairs.map(pair => +pair.split(/ +/)[1])
