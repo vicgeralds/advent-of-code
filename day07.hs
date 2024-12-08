@@ -1,6 +1,9 @@
 module AdventDaySeven where
 
-operators = [(+), (*)]
+concatenate :: Integer -> Integer -> Integer
+concatenate a b = read $ (show a) ++ (show b)
+
+operators = [(+), (*), concatenate]
 
 equation testValue [acc] = testValue == acc
 equation testValue (acc:x:xs) = testValue >= acc &&
