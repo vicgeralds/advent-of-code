@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 my $sum = 0;
 
 my $input = "";
