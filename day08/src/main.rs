@@ -6,7 +6,7 @@ fn is_antenna(c: char) -> bool {
     return c.is_lowercase() || c.is_uppercase() || c.is_digit(10);
 }
 
-fn get_antinodes(antennas: Vec<(i16, i16)>) -> Vec<(i16, i16)> {
+fn get_antinodes(antennas: Vec<(i16, i16)>, map_height: i16, map_width: i16) -> Vec<(i16, i16)> {
     let mut antinodes = Vec::new();
     let mut prev_points: Vec<(i16, i16)> = Vec::new();
 
@@ -14,8 +14,24 @@ fn get_antinodes(antennas: Vec<(i16, i16)>) -> Vec<(i16, i16)> {
         for prev_point in &prev_points[..] {
             let d0 = point.0 - prev_point.0; 
             let d1 = point.1 - prev_point.1;
-            antinodes.push((prev_point.0 - d0, prev_point.1 - d1));
-            antinodes.push((point.0 + d0, point.1 + d1));
+
+            let mut i = point.0;
+            let mut j = point.1;
+
+            while i >= 0 && j >= 0 && j < map_width {
+                antinodes.push((i, j));
+                i = i - d0;
+                j = j - d1;
+            }
+
+            i = point.0 + d0;
+            j = point.1 + d1;
+
+            while i < map_height && j >= 0 && j < map_width {
+                antinodes.push((i, j));
+                i = i + d0;
+                j = j + d1;
+            }
         }
         prev_points.push(point);
     }
@@ -41,8 +57,7 @@ fn main() {
     }
 
     let unique_locations: HashSet<(i16, i16)> = antennas_by_freq.into_values()
-        .flat_map(get_antinodes)
-        .filter(|antinode| antinode.0 >= 0 && antinode.0 < map_height && antinode.1 >= 0 && antinode.1 < map_width)
+        .flat_map(|antennas| get_antinodes(antennas, map_height, map_width))
         .collect();
 
     println!("How many unique locations within the bounds of the map contain an antinode?");
