@@ -40,8 +40,32 @@
       (match direction
         [(cons i j) (equal? plant (get-plant (+ i row) (+ j col)))]))
     (let* ([unfenced-directions
-           (filter unfenced? (get-directions row col))])
-      (cons (- 4 (length unfenced-directions))
+            (filter unfenced? (get-directions row col))]
+           [repeated-sides
+            (+
+             (if (member up unfenced-directions)
+                 (+
+                  (if (or (equal? 0 col)
+                          (not (or (member left unfenced-directions)
+                                   (equal? plant (get-plant (- row 1) (- col 1))))))
+                      1 0)
+                  (if (or (equal? width (+ 1 col))
+                          (not (or (member right unfenced-directions)
+                                   (equal? plant (get-plant (- row 1) (+ col 1))))))
+                      1 0))
+                 0)
+             (if (member left unfenced-directions)
+                 (+
+                  (if (or (equal? 0 row)
+                          (not (or (member up unfenced-directions)
+                                   (equal? plant (get-plant (- row 1) (- col 1))))))
+                      1 0)
+                  (if (or (equal? height (+ 1 row))
+                          (not (or (member down unfenced-directions)
+                                   (equal? plant (get-plant (+ row 1) (- col 1))))))
+                      1 0))
+                 0))])
+      (cons (- 4 (length unfenced-directions) repeated-sides)
             (apply append
                    (for/list ([direction unfenced-directions])
                      (match direction
